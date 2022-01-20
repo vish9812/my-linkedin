@@ -6,12 +6,33 @@ import OndemandVideoSharpIcon from "@mui/icons-material/OndemandVideoSharp";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import Head from "next/head";
+import { GetStaticProps } from "next";
+import { getProviders, signIn } from "next-auth/react";
+import type { ClientSafeProvider, LiteralUnion } from "next-auth/react";
+import type { BuiltInProviderType } from "next-auth/providers";
 
-const Home = () => {
+export const getStaticProps: GetStaticProps = async (context) => {
+  const providers = await getProviders();
+
+  return {
+    props: {
+      providers,
+    },
+  };
+};
+
+interface HomeProps {
+  providers: Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  >;
+}
+
+const Home = ({ providers }: HomeProps) => {
   return (
     <div className="space-y-10 relative">
       <Head>
-        <title>LinkedIn</title>
+        <title>My LinkedIn</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className="flex justify-around items-center py-4">
@@ -31,18 +52,18 @@ const Home = () => {
             <HeaderLink Icon={BusinessCenterIcon} text="Jobs" />
           </div>
 
-          {/* {Object.values(providers).map((provider) => (
-            <div key={provider.name}> */}
-          <div className="pl-4">
-            <button
-              className="text-blue-700 font-semibold rounded-full border border-blue-700 px-5 py-1.5 transition-all hover:border-2"
-              // onClick={() => signIn(provider.id, { callbackUrl: "/" })}
-            >
-              Sign in
-            </button>
-          </div>
-          {/* </div>
-          ))} */}
+          {Object.values(providers).map((provider) => (
+            <div key={provider.name}>
+              <div className="pl-4">
+                <button
+                  className="text-blue-700 font-semibold rounded-full border border-blue-700 px-5 py-1.5 transition-all hover:border-2"
+                  onClick={() => signIn(provider.id, { callbackUrl: "/" })}
+                >
+                  Sign in
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </header>
 

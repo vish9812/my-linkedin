@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  linkedindb:
+    image: mongo
+
+  mongoclient:
+    image: mongoclient/mongoclient
+
+  portainer:
+    image: portainer/portainer-ce
+
+volumes:
+  mongo_data:
+  mongoclient_data:
+  portainer_data:

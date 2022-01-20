@@ -1,0 +1,33 @@
+version: "3.4"
+
+services:
+  linkedindb:
+    container_name: linkedindb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  mongoclient:
+    container_name: mongoclient
+    environment:
+      - MONGOCLIENT_DEFAULT_CONNECTION_URL=mongodb://linkedindb:27017/LinkedInDb
+    restart: always
+    depends_on:
+      - linkedindb
+    ports:
+      - "2700:3000"
+    volumes:
+      - mongoclient_data:/data/db
+
+  portainer:
+    container_name: portainer
+    restart: always
+    depends_on:
+      - mongoclient
+    ports:
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
